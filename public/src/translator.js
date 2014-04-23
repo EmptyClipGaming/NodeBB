@@ -13,6 +13,7 @@
 		languages[language] = languages[language] || {};
 		languages[language].loaded = languages[language].loaded || {};
 		languages[language].loaded[filename] = translations;
+		languages[language].loading = languages[language].loading || {};
 	};
 
 	translator.getLanguage = function() {
@@ -217,7 +218,8 @@
 
 		fs.readFile(path.join(__dirname, '../language', language, filename + '.json'), function(err, data) {
 			if (err) {
-				return winston.error(err.message);
+				winston.error('Could not load `' + filename + '`: ' + err.message + '. Skipping...');
+				return callback({});
 			}
 
 			try {

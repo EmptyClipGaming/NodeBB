@@ -191,7 +191,8 @@ define(['composer', 'forum/pagination', 'share', 'navigator', 'forum/categoryToo
 
 				if (numTopics > 0) {
 					for (var x = 0; x < numTopics; x++) {
-						if ($(topics[x]).find('.fa-thumb-tack').length) {
+						var pinned = $(topics[x]).hasClass('pinned');
+						if (pinned) {
 							if(x === numTopics - 1) {
 								topic.insertAfter(topics[x]);
 							}
@@ -314,7 +315,6 @@ define(['composer', 'forum/pagination', 'share', 'navigator', 'forum/categoryToo
 			cid: cid,
 			after: after
 		}, function (err, data) {
-			console.log(data);
 			loadingMoreTopics = false;
 
 			if(err) {

@@ -110,9 +110,13 @@ var bcrypt = require('bcryptjs'),
 	};
 
 	User.isReadyToPost = function(uid, callback) {
+		if (meta.config.allowGuestPosting && parseInt(uid, 10) === 0) {
+			return callback();
+		}
+
 		async.parallel({
 			banned: function(next) {
-				User.getUserField(uid, 'banned',next);
+				User.getUserField(uid, 'banned', next);
 			},
 			exists: function(next) {
 				db.exists('user:' + uid, next);
@@ -278,6 +282,20 @@ var bcrypt = require('bcryptjs'),
 	User.count = function(callback) {
 		db.getObjectField('global', 'userCount', function(err, count) {
 			callback(err, count ? count : 0);
+		});
+	};
+
+	User.getNameSlugPicture = function(uid, callback) {
+		User.getUserFields(uid, ['username', 'userslug', 'picture'], function(err, data) {
+			if (err) {
+				return callback(err);
+			}
+
+			callback(null, {
+				username: data.username || '[[global:guest]]',
+				userslug: data.userslug || '',
+				picture: data.picture || gravatar.url('', {}, true)
+			});
 		});
 	};
 
