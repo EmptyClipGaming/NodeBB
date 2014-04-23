@@ -22,8 +22,8 @@ var Meta = {};
 Meta.restartRequired = false;
 Meta.config = {};
 
-Meta.configs = require('./meta/configs');
-Meta.themes = require('./meta/themes');
+Meta.configs = require('./meta/configs')(Meta);
+Meta.themes = require('./meta/themes')(Meta);
 
 Meta.title = {
 	tests: {
